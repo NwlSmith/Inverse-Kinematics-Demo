@@ -16,6 +16,8 @@ public class PhysicsMovementManager : MonoBehaviour
     public LegManager[] legManagers;
     public float upwardForce = 100f;
 
+    public bool drunkMode = false;
+
     private Vector3 targetVel;
     private float moveZ;
     private float rotY;
@@ -91,7 +93,7 @@ public class PhysicsMovementManager : MonoBehaviour
             rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, transform.up * rotY * rotSpeed, 5f * Time.fixedDeltaTime);
         }
 
-        Vector3 uprightForce = transform.up * -4000f;
+        Vector3 uprightForce = transform.up * (drunkMode ? 4000f : -4000f);
         uprightForce.y = 0f;
 
         Debug.DrawRay(transform.position + transform.up * 2f, uprightForce, Color.cyan);
