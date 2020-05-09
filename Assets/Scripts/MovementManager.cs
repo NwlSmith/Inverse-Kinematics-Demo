@@ -21,12 +21,12 @@ public class MovementManager : MonoBehaviour
     void Start()
     {
         legManagers = GetComponentsInChildren<LegManager>();
-
-        foreach (LegManager legManager in legManagers)
+        for (int i = 0; i < legManagers.Length; i++)
         {
-            legManager.footHeight = footHeight;
-            legManager.maxTargetDistance = maxTargetDistance;
-            legManager.targetMoveSpeed = targetMoveSpeed;
+            legManagers[i].footHeight = footHeight;
+            legManagers[i].maxTargetDistance = maxTargetDistance;
+            legManagers[i].targetMoveSpeed = targetMoveSpeed;
+            legManagers[i].oppositeLeg = i % 2 == 0 ? legManagers[i + 1] : legManagers[i - 1];
         }
     }
 
@@ -49,8 +49,10 @@ public class MovementManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Calculate new height
-        Vector3 newPos = transform.position + transform.forward * moveZ * moveSpeed * Time.fixedDeltaTime;
+        
+        // Calculate new position
+        float speedMult = Input.GetKey(KeyCode.LeftShift) ? 2f : 1f;
+        Vector3 newPos = transform.position + transform.forward * moveZ * moveSpeed * speedMult * Time.fixedDeltaTime ;
         newPos.y = 0f;
         newPos.y += groundOffset;
         foreach (LegManager legManager in legManagers)
@@ -66,7 +68,6 @@ public class MovementManager : MonoBehaviour
         z = 0f;
         Vector3 newRot = new Vector3(x, y, z);
         transform.rotation = Quaternion.Euler(newRot);
-
 
     }
 }

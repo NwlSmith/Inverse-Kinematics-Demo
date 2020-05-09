@@ -10,6 +10,8 @@ public class LegManager : MonoBehaviour
     public Transform stationaryTarget;
     public Transform movingTargetOrigin;
     public Transform debugSphere;
+    public LegManager oppositeLeg;
+    public bool moving = false;
     private Vector3 trueStatTarget;
     private IKBasic iKManager;
 
@@ -36,7 +38,7 @@ public class LegManager : MonoBehaviour
 
     public void CalculateMovement()
     {
-        stationaryTarget.position = Vector3.Slerp(stationaryTarget.position, trueStatTarget, targetMoveSpeed * Time.deltaTime);
+
         Debug.DrawRay(movingTargetOrigin.position, -movingTargetOrigin.up * footHeight, Color.green);
         RaycastHit hit;
         if (Physics.Raycast(movingTargetOrigin.position, -movingTargetOrigin.up, out hit, footHeight))
@@ -48,6 +50,13 @@ public class LegManager : MonoBehaviour
             }
         }
 
+        if (Vector3.Distance(trueStatTarget, stationaryTarget.position) < .1f || oppositeLeg.moving)
+            moving = false;
+        else
+        {
+            moving = true;
+            stationaryTarget.position = Vector3.Slerp(stationaryTarget.position, trueStatTarget, targetMoveSpeed * Time.deltaTime);
+        }
     }
 
     public float LeafHeight()
